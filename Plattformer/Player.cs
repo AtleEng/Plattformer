@@ -9,8 +9,8 @@ public class Player : GameObject
         this.hitbox = new Rectangle(pos.X * gm.tile, pos.Y * gm.tile, gm.tile * 0.5f, gm.tile * 0.75f);
         color = Color.BLUE;
         tag = Tag.player;
-
-        SetActive(true);
+        spriteLocation = new Rectangle(0, 0, 8, 8);
+        isFacingRight = true;
     }
     private float _jumpForce = 12f;
     private float _moveSpeed = 4f;
@@ -19,18 +19,19 @@ public class Player : GameObject
     //plays every frame when game starts
     public void Update()
     {
+        System.Console.WriteLine("e");
         xSpeed = _moveSpeed;
         //calls the physics in GameObject
         PhysicsUpdate();
         Controlls();
-        if (isDead || hitbox.x > 3000)
+        if (isDead || hitbox.x > 30 * gm.tile)
         {
             gm.gameState = Gamemanager.GameStates.dead;
         }
 
         if (hasWon)
         {
-            gm.gameState = Gamemanager.GameStates.win;
+            gm.gameState = Gamemanager.GameStates.clearedLevel;
         }
     }
     private void Controlls()
@@ -49,14 +50,17 @@ public class Player : GameObject
         if (Raylib.IsKeyDown(KeyboardKey.KEY_D))
         {
             moveInput = 1;
+            isFacingRight = true;
         }
         else if (Raylib.IsKeyDown(KeyboardKey.KEY_A))
         {
             moveInput = -1;
+            isFacingRight = false;
         }
         else
         {
             moveInput = 0;
         }
+        System.Console.WriteLine(isFacingRight);
     }
 }

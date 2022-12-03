@@ -9,7 +9,5 @@ public class Block : GameObject
         this.hitbox = new Rectangle(pos.X * gm.tile, pos.Y * gm.tile, gm.tile, gm.tile);
 
         spriteLocation = new Rectangle(0, 8, 8, 8);
-
-        SetActive(true);
     }
 }

@@ -11,8 +11,6 @@ Raylib.SetTargetFPS(60);
 
 //create and start gameManager
 Gamemanager gm = new();
-
-gm.Start();
 //play until closed
 while (Raylib.WindowShouldClose() == false)
 {

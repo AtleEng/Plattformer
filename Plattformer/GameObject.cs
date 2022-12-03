@@ -21,6 +21,7 @@ public class GameObject
     public bool isGrounded = false;
     public bool isTouchingRightWall = false;
     public bool isTouchingLeftWall = false;
+    public bool isFacingRight = false;
 
     //state bools
     public bool isDead = false;
@@ -42,81 +43,54 @@ public class GameObject
         //Sideways movement and X collition
         hitbox.x += moveInput * xSpeed;
 
-        Rectangle bestRect = new();
-        foreach (GameObject gO in gm.allObjects)
+        Rectangle rect = new();
+        GameObject gO = new();
+        foreach (GameObject _gO in gm.allObjects)
         {
-            if (gO != this)
+            if (_gO != this && _gO.tag != tag)
             {
                 //check if colliding
-                Rectangle rect = Raylib.GetCollisionRec(hitbox, gO.hitbox);
-
-                if (rect.width * rect.height > bestRect.width * bestRect.height)
+                Rectangle _rect = Raylib.GetCollisionRec(hitbox, _gO.hitbox);
+                if (_rect.width * _rect.height > rect.width * rect.height)
                 {
-                    bestRect = rect;
-                }
-
-                //check if gameObjects hitbox is left or right of the other hitbox
-                int isX = 1;
-                if (gO.hitbox.x < hitbox.x)
-                {
-                    isX = -1;
-                }
-                //check if gameObjects hitbox is over or under of the other hitbox
-                int isY = 1;
-                if (gO.hitbox.y < hitbox.y)
-                {
-                    isY = -1;
-                }
-                //check if it is a wall or a floor/roof
-                if (rect.height < rect.width && rect.height != 0)
-                {
-                    //move hitbox to correct Y position
-                    hitbox.y -= rect.height * isY;
-                    //check if it is floor or roof (only works if you jump at the roof)
-                    if (rect.y > hitbox.y)
-                    {
-                        fallSpeed = 0;
-                        isGrounded = true;
-                    }
-                    else if (fallSpeed < 0)
-                    {
-                        fallSpeed = 0;
-                    }
-                }
-                else if (rect.width < rect.height && rect.width != 0)
-                {
-                    //move hitbox to correct X position
-                    hitbox.x -= rect.width * isX;
-
-                }
-
-                if (rect.width != 0 || rect.height != 0)
-                {
-                    if (tag == Tag.player && gO.tag == Tag.hurtPlayer)
-                    {
-                        isDead = true;
-                    }
-                    else if (tag == Tag.hurtPlayer && gO.tag == Tag.player)
-                    {
-                        gO.isDead = true;
-                    }
-
-                    if (tag == Tag.player && gO.tag == Tag.portal)
-                    {
-                        hasWon = true;
-                    }
-                    else if (tag == Tag.portal && gO.tag == Tag.player)
-                    {
-                        hasWon = true;
-                    }
-
+                    rect = _rect;
+                    gO = _gO;
                 }
             }
         }
-
-        if (bestRect.width < bestRect.height && bestRect.width != 0)
+        //check if gameObjects hitbox is left or right of the other hitbox
+        int isX = 1;
+        if (gO.hitbox.x < hitbox.x)
         {
-            if (bestRect.x > hitbox.x)
+            isX = -1;
+        }
+        //check if gameObjects hitbox is over or under of the other hitbox
+        int isY = 1;
+        if (gO.hitbox.y < hitbox.y)
+        {
+            isY = -1;
+        }
+        //check if it is a wall or a floor/roof
+        if (rect.height < rect.width && rect.height != 0)
+        {
+            //move hitbox to correct Y position
+            hitbox.y -= rect.height * isY;
+            //check if it is floor or roof (only works if you jump at the roof)
+            if (rect.y > hitbox.y)
+            {
+                fallSpeed = 0;
+                isGrounded = true;
+            }
+            else if (fallSpeed < 0)
+            {
+                fallSpeed = 0;
+            }
+        }
+        else if (rect.width < rect.height && rect.width != 0)
+        {
+            //move hitbox to correct X position
+            hitbox.x -= rect.width * isX;
+            if (rect.x > hitbox.x)
             {
                 isTouchingLeftWall = true;
             }
@@ -125,17 +99,26 @@ public class GameObject
                 isTouchingRightWall = true;
             }
         }
-    }
-    //Use to disable gameobject
-    public void SetActive(bool active)
-    {
-        if (active)
+
+        if (rect.width != 0 || rect.height != 0)
         {
-            gm.allObjects.Add(this);
-        }
-        else
-        {
-            gm.allObjects.Remove(this);
+            if (tag == Tag.player && gO.tag == Tag.hurtPlayer)
+            {
+                isDead = true;
+            }
+            else if (tag == Tag.hurtPlayer && gO.tag == Tag.player)
+            {
+                gO.isDead = true;
+            }
+
+            if (tag == Tag.player && gO.tag == Tag.portal)
+            {
+                hasWon = true;
+            }
+            else if (tag == Tag.portal && gO.tag == Tag.player)
+            {
+                hasWon = true;
+            }
         }
     }
     //Set position of gameobject via a Vector 2

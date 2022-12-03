@@ -11,7 +11,5 @@ public class WinPortal : GameObject
         tag = Tag.portal;
 
         color = Color.YELLOW;
-
-        SetActive(true);
     }
 }
