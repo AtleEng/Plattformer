@@ -11,15 +11,22 @@ public class Player : GameObject
         tag = Tag.player;
         spriteLocation = new Rectangle(0, 0, 8, 8);
         isFacingRight = true;
+
+        gm.OnUppdate += Update;
+        gm.OnReloadLevel += ReloadLevel;
     }
-    private float _jumpForce = 12f;
+    void ReloadLevel()
+    {
+        gm.OnUppdate -= Update;
+        gm.OnReloadLevel -= ReloadLevel;
+    }
+    private float _jumpForce = 13f;
     private float _moveSpeed = 4f;
     private int amountOfJumps = 2;
     private int _amountOfJumps = 0;
     //plays every frame when game starts
     public void Update()
     {
-        System.Console.WriteLine("e");
         xSpeed = _moveSpeed;
         //calls the physics in GameObject
         PhysicsUpdate();

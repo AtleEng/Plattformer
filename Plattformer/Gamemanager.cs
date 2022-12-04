@@ -9,6 +9,9 @@ public class Gamemanager
     //Set the state of the game to start
     public GameStates gameState = GameStates.startScreen;
     public List<GameObject> allObjects = new();
+    public event Action OnUppdate;
+    public event Action OnReloadLevel;
+
     //actives ones at the begining of the program
     public Gamemanager() { levelManager = new Level(this); }
 
@@ -16,6 +19,12 @@ public class Gamemanager
     public void Update()
     {
         allObjects = levelManager.allObjects;
+
+        if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_CONTROL) && Raylib.IsKeyPressed(KeyboardKey.KEY_C))
+        {
+            ConsoleComandos();
+        }
+
         if (gameState == GameStates.startScreen)
         {
             Start();
@@ -41,20 +50,20 @@ public class Gamemanager
     {
         if (Raylib.IsKeyPressed(KeyboardKey.KEY_S))
         {
-            StartTheGame();
+            gameState = GameStates.playing;
+            System.Console.WriteLine("Game has started");
+
+            levelManager.ChangeLevel(0);
         }
     }
     private void Playing()
     {
         if (Raylib.IsKeyPressed(KeyboardKey.KEY_R))
         {
-            levelManager.ChangeLevel(0);
+            levelManager.ReloadLevel();
         }
-        levelManager.player.Update();
-        foreach (Enemy enemy in levelManager.allEnemies)
-        {
-            enemy.Update();
-        }
+
+        OnUppdate.Invoke();
     }
     private void Win()
     {
@@ -62,12 +71,13 @@ public class Gamemanager
     }
     private void Dead()
     {
+        OnReloadLevel.Invoke();
         levelManager.ReloadLevel();
         gameState = GameStates.playing;
     }
-
     private void Clearedlevel()
     {
+        OnReloadLevel.Invoke();
         if (levelManager.currentLevel >= levelManager.alllevels.Count - 1)
         {
             levelManager.ClearLevel();
@@ -87,7 +97,7 @@ public class Gamemanager
         {
             bool shouldFlip = gO.isFacingRight;
             //Draw the hitbox
-            Raylib.DrawRectangle((int)gO.hitbox.x, (int)gO.hitbox.y, (int)gO.hitbox.width, (int)gO.hitbox.height, Color.LIME);
+            //Raylib.DrawRectangle((int)gO.hitbox.x, (int)gO.hitbox.y, (int)gO.hitbox.width, (int)gO.hitbox.height, Color.LIME);
             //Draw the texture
             if (!shouldFlip)
             {
@@ -102,15 +112,12 @@ public class Gamemanager
 
         Raylib.EndDrawing();
     }
-    //when the "real" game start 
-    void StartTheGame()
+
+    void ConsoleComandos()
     {
-        gameState = GameStates.playing;
-        System.Console.WriteLine("Game has started");
+        System.Console.WriteLine("Opend console");
+        string input = Console.ReadLine();
 
-        levelManager.ChangeLevel(0);
-
-        //splayer = new Player("Player", this, new Vector2(3, 3));
     }
     public enum GameStates
     {

@@ -17,6 +17,14 @@ public class Enemy : GameObject
         this.isStatic = isStatic;
 
         xSpeed = _moveSpeed;
+
+        gm.OnUppdate += Update;
+        gm.OnReloadLevel += ReloadLevel;
+    }
+    void ReloadLevel()
+    {
+        gm.OnUppdate -= Update;
+        gm.OnReloadLevel -= ReloadLevel;
     }
     private float _jumpForce = 10f;
     private float _moveSpeed = 4f;
