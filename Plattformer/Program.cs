@@ -7,6 +7,7 @@ int height = 900;
 
 //create window and set target FPS
 Raylib.InitWindow(width, height, "Plattformer");
+//set fps to 60
 Raylib.SetTargetFPS(60);
 
 //create and start gameManager

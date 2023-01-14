@@ -6,7 +6,7 @@ public class WinPortal : GameObject
     {
         name = "Portal";
         this.gm = gm;
-        this.hitbox = new Rectangle(pos.X * gm.tile, pos.Y * gm.tile, gm.tile, gm.tile);
+        this.hitbox = new Rectangle(pos.X * gm.tile + gm.tile / 8, pos.Y * gm.tile + gm.tile / 8, gm.tile * 0.75f, gm.tile * 0.75f);
         spriteLocation = new Rectangle(8, 8, 8, 8);
         tag = Tag.portal;
 

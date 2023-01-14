@@ -47,7 +47,7 @@ public class GameObject
         GameObject gO = new();
         foreach (GameObject _gO in gm.allObjects)
         {
-            if (_gO != this && _gO.tag != tag)
+            if (_gO != this && _gO.tag != tag && !(tag == Tag.hurtPlayer && _gO.tag == Tag.portal))
             {
                 //check if colliding
                 Rectangle _rect = Raylib.GetCollisionRec(hitbox, _gO.hitbox);

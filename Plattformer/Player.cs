@@ -20,7 +20,7 @@ public class Player : GameObject
         gm.OnUppdate -= Update;
         gm.OnReloadLevel -= ReloadLevel;
     }
-    private float _jumpForce = 13f;
+    private float _jumpForce = 9f;
     private float _moveSpeed = 4f;
     private int amountOfJumps = 2;
     private int _amountOfJumps = 0;
@@ -48,18 +48,18 @@ public class Player : GameObject
             _amountOfJumps = amountOfJumps;
         }
         //check if space is pressed, if true then jump
-        if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) && _amountOfJumps > 0)
+        if ((Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_W) || Raylib.IsKeyPressed(KeyboardKey.KEY_UP)) && _amountOfJumps > 0)
         {
             _amountOfJumps--;
             fallSpeed = -_jumpForce;
         }
         //handle x movement
-        if (Raylib.IsKeyDown(KeyboardKey.KEY_D))
+        if (Raylib.IsKeyDown(KeyboardKey.KEY_D) || Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT))
         {
             moveInput = 1;
             isFacingRight = true;
         }
-        else if (Raylib.IsKeyDown(KeyboardKey.KEY_A))
+        else if (Raylib.IsKeyDown(KeyboardKey.KEY_A) || Raylib.IsKeyDown(KeyboardKey.KEY_LEFT))
         {
             moveInput = -1;
             isFacingRight = false;

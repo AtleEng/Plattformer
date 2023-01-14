@@ -2,6 +2,7 @@ using System.Numerics;
 using Raylib_cs;
 public class Gamemanager
 {
+    //size of tiles in pixels
     public int tile = 75;
     public Level levelManager;
     //Loading in spriteSheet
@@ -12,18 +13,13 @@ public class Gamemanager
     public event Action OnUppdate;
     public event Action OnReloadLevel;
 
-    //actives ones at the begining of the program
+    //actives once at the begining of the program
     public Gamemanager() { levelManager = new Level(this); }
 
     //updates every frame
     public void Update()
     {
         allObjects = levelManager.allObjects;
-
-        if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_CONTROL) && Raylib.IsKeyPressed(KeyboardKey.KEY_C))
-        {
-            ConsoleComandos();
-        }
 
         if (gameState == GameStates.startScreen)
         {
@@ -48,6 +44,10 @@ public class Gamemanager
     }
     private void Start()
     {
+        Raylib.DrawText($"Plattformer", 100, 200, 150, Color.WHITE);
+        Raylib.DrawText($"Made by: Atle Engelbrektsson", 100, 325, 25, Color.WHITE);
+        Raylib.DrawText($"Press S to start", 100, 600, 50, Color.WHITE);
+
         if (Raylib.IsKeyPressed(KeyboardKey.KEY_S))
         {
             gameState = GameStates.playing;
@@ -58,16 +58,25 @@ public class Gamemanager
     }
     private void Playing()
     {
+        //if r is pressed restart level
         if (Raylib.IsKeyPressed(KeyboardKey.KEY_R))
         {
+            OnReloadLevel.Invoke();
             levelManager.ReloadLevel();
+            gameState = GameStates.playing;
         }
-
+        //Active OnUppdate for all objects
         OnUppdate.Invoke();
     }
     private void Win()
     {
         System.Console.WriteLine("YOU WIN");
+        Raylib.DrawText($"You win", 100, 200, 150, Color.WHITE);
+        Raylib.DrawText($"Press S to exit to startscreen", 100, 600, 50, Color.WHITE);
+        if (Raylib.IsKeyPressed(KeyboardKey.KEY_S))
+        {
+            gameState = GameStates.startScreen;
+        }
     }
     private void Dead()
     {
@@ -109,16 +118,24 @@ public class Gamemanager
             }
 
         }
+        //Game Text
+        if (gameState == GameStates.playing)
+        {
+            Raylib.DrawText($"{levelManager.currentLevel + 1}", 20, 20, 100, Color.WHITE);
+
+            if (levelManager.currentLevel == 1)
+            {
+                Raylib.DrawText($"Press R to restart", 100, 350, 20, Color.WHITE);
+            }
+            else if (levelManager.currentLevel == 0)
+            {
+                Raylib.DrawText($"Press W, SPACE or ^ to jump \nPress AD or -> <- to  \nYou can double jump", 100, 450, 20, Color.WHITE);
+            }
+        }
 
         Raylib.EndDrawing();
     }
 
-    void ConsoleComandos()
-    {
-        System.Console.WriteLine("Opend console");
-        string input = Console.ReadLine();
-
-    }
     public enum GameStates
     {
         startScreen, playing, win, dead, clearedLevel

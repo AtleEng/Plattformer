@@ -16,6 +16,7 @@ public class Enemy : GameObject
         this._jumpForce = _jumpForce;
         this.isStatic = isStatic;
 
+        
         xSpeed = _moveSpeed;
 
         gm.OnUppdate += Update;
