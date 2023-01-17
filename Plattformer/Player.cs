@@ -22,7 +22,7 @@ public class Player : GameObject
     }
     private float _jumpForce = 9f;
     private float _moveSpeed = 4f;
-    private int amountOfJumps = 2;
+    private int amountOfJumps = 1;
     private int _amountOfJumps = 0;
     //plays every frame when game starts
     public void Update()
@@ -47,10 +47,14 @@ public class Player : GameObject
         {
             _amountOfJumps = amountOfJumps;
         }
+
         //check if space is pressed, if true then jump
         if ((Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_W) || Raylib.IsKeyPressed(KeyboardKey.KEY_UP)) && _amountOfJumps > 0)
         {
-            _amountOfJumps--;
+            if (!isGrounded)
+            {
+                _amountOfJumps--;
+            }
             fallSpeed = -_jumpForce;
         }
         //handle x movement
